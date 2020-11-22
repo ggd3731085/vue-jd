@@ -4,8 +4,8 @@ const common = require('../libs/common');
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'huangche201314',
-    database: 'myigou'
+    password: 'ggd3731085',
+    database: 'shopdb'
 });
 module.exports = () => {
     const route = express.Router();
@@ -184,7 +184,7 @@ module.exports = () => {
             console.log(mObj);
         }
         let username = mObj.loginName;
-        let password = common.md5(mObj.loginPawd + common.MD5_SUFFXIE);;
+        let password = common.md5(mObj.loginPawd + common.MD5_SUFFXIE);
         // console.log(username, mObj.passwd);
         const selectUser = `SELECT * FROM user where user_name='${username}'`;
         db.query(selectUser, (err, data) => {
@@ -197,13 +197,16 @@ module.exports = () => {
                 } else {
                     let dataw = data[0];
                     //login sucess
-                    if (dataw.login_password === password) {
+                    console.log('login_password:' + dataw.login_password);
+                    console.log('password:' + password);
+                    if (dataw.login_password == password) {
                         //save the session 
                         req.session['user_id'] = dataw.user_id;
                         dataw.msg = "登录成功";
                         dataw.status = 1;
                         res.send(dataw).end();
                     } else {
+                        console.log('login_fail' );
                         res.send({ 'msg': '密码不正确', 'status': -2 }).end();
                     }
                 }
